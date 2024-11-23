@@ -1,0 +1,16 @@
+{
+    "name": "RedShoreGames.StateMachine",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f72337c1b4bbd42cd98ba971ee336ed8"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

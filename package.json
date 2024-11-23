@@ -1,0 +1,13 @@
+{
+  "name": "com.redshoregames.statemachine",
+  "displayName": "Red Shore Games State Machine Package",
+  "version": "1.0.0",
+  "unity": "6000.0",
+  "author": "Red Shore Games",
+  "description": "This is an state machine system to make easy state management!",
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Red-Shore-Games/com.redshoregames.statemachine.git"
+  }
+}
