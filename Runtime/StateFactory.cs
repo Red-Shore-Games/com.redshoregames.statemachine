@@ -24,7 +24,7 @@ namespace RedShoreGames.StateMachine
 
         public U GetState<U>() where U : State<T>
         {
-            if (_stateFactories.TryGetValue(typeof(U), out Func<State<T>> stateFactory))
+            if (_stateFactories.TryGetValue(typeof(U), out var stateFactory))
             {
                 return (U)stateFactory();
             }
