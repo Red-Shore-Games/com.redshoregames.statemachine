@@ -14,7 +14,7 @@ namespace RedShoreGames.StateMachine
             _stateMachine = stateMachine;
         }
 
-        public U GetState<U>() where U : State<T>, new()
+        public U GetState<U>() where U : State<T>
         {
             Type stateType = typeof(U);
 
@@ -23,7 +23,7 @@ namespace RedShoreGames.StateMachine
                 return (U)cachedState;
             }
 
-            var newState = new U();
+            var newState = (U)Activator.CreateInstance(typeof(U), _stateMachine);
             _cachedStates[stateType] = newState;
             return newState;
         }
