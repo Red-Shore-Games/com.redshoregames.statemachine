@@ -7,7 +7,7 @@ namespace RedShoreGames.StateMachine
 {
     public class StateFactory<T> where T : MonoBehaviour
     {
-        private readonly Dictionary<Type, Lazy<State<T>>> _states = new();
+        private readonly Dictionary<Type, Func<State<T>>> _stateFactories = new();
 
         public StateFactory(BaseStateMachine<T> stateMachine)
         {
@@ -18,15 +18,15 @@ namespace RedShoreGames.StateMachine
 
             foreach (Type type in stateTypes)
             {
-                _states[type] = new Lazy<State<T>>(() => (State<T>)Activator.CreateInstance(type, stateMachine));
+                _stateFactories[type] = () => (State<T>)Activator.CreateInstance(type, stateMachine);
             }
         }
 
         public U GetState<U>() where U : State<T>
         {
-            if (_states.TryGetValue(typeof(U), out Lazy<State<T>> lazyState))
+            if (_stateFactories.TryGetValue(typeof(U), out Func<State<T>> stateFactory))
             {
-                return (U)lazyState.Value;
+                return (U)stateFactory();
             }
 
             throw new InvalidOperationException($"State of type {typeof(U).Name} is not registered.");
