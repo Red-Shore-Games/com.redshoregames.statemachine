@@ -7,11 +7,14 @@ namespace RedShoreGames.StateMachine
     public class StateFactory<T> where T : MonoBehaviour
     {
         private readonly Dictionary<Type, State<T>> _cachedStates = new();
-        private readonly BaseStateMachine<T> _stateMachine;
 
-        public StateFactory(BaseStateMachine<T> stateMachine)
+        public void RegisterState<U>(U state) where U : State<T>
         {
-            _stateMachine = stateMachine;
+            var stateType = typeof(U);
+            if (!_cachedStates.ContainsKey(stateType))
+            {
+                _cachedStates[stateType] = state;
+            }
         }
 
         public U GetState<U>() where U : State<T>
@@ -23,9 +26,7 @@ namespace RedShoreGames.StateMachine
                 return (U)cachedState;
             }
 
-            var newState = (U)Activator.CreateInstance(typeof(U), _stateMachine);
-            _cachedStates[stateType] = newState;
-            return newState;
+            throw new InvalidOperationException($"State of type {stateType} has not been registered.");
         }
     }
 }
