@@ -1,35 +1,31 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace RedShoreGames.StateMachine
 {
     public class StateFactory<T> where T : MonoBehaviour
     {
-        private readonly Dictionary<Type, Func<State<T>>> _stateFactories = new();
+        private readonly Dictionary<Type, State<T>> _cachedStates = new();
+        private readonly BaseStateMachine<T> _stateMachine;
 
         public StateFactory(BaseStateMachine<T> stateMachine)
         {
-            List<Type> stateTypes = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(State<T>)))
-                .ToList();
-
-            foreach (Type type in stateTypes)
-            {
-                _stateFactories[type] = () => (State<T>)Activator.CreateInstance(type, stateMachine);
-            }
+            _stateMachine = stateMachine;
         }
 
-        public U GetState<U>() where U : State<T>
+        public U GetState<U>() where U : State<T>, new()
         {
-            if (_stateFactories.TryGetValue(typeof(U), out var stateFactory))
+            Type stateType = typeof(U);
+
+            if (_cachedStates.TryGetValue(stateType, out var cachedState))
             {
-                return (U)stateFactory();
+                return (U)cachedState;
             }
 
-            throw new InvalidOperationException($"State of type {typeof(U).Name} is not registered.");
+            var newState = new U();
+            _cachedStates[stateType] = newState;
+            return newState;
         }
     }
 }
