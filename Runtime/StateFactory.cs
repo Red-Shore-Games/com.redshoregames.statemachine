@@ -8,9 +8,6 @@ namespace RedShoreGames.StateMachine
     {
         private readonly Dictionary<Type, State<T>> _cachedStates = new();
 
-        /// <summary>
-        /// Registers a new state in the factory.
-        /// </summary>
         public void RegisterState<U>(U state) where U : State<T>
         {
             var stateType = typeof(U);
@@ -20,23 +17,16 @@ namespace RedShoreGames.StateMachine
             }
         }
 
-        /// <summary>
-        /// Gets a registered state or creates it if it doesn't exist.
-        /// </summary>
-        public U GetState<U>() where U : State<T>, new()
+        public U GetState<U>() where U : State<T>
         {
-            var stateType = typeof(U);
+            Type stateType = typeof(U);
 
             if (_cachedStates.TryGetValue(stateType, out var cachedState))
             {
                 return (U)cachedState;
             }
 
-            // State not found; create a new instance and cache it
-            var newState = new U();
-            _cachedStates[stateType] = newState;
-
-            return newState;
+            throw new InvalidOperationException($"State of type {stateType} has not been registered.");
         }
     }
 }
